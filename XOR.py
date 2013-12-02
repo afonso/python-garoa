@@ -30,7 +30,7 @@ def main():
     import sys
 
     try:
-        _, tipo, nome_entrada = sys.argv[1:]
+        tipo, nome_entrada = sys.argv[1:]
     except ValueError:
         nome_entrada = input('nome do arquivo: ')
         tipo = input('qual o tipo da acao? (cifrar|decifrar): ')
