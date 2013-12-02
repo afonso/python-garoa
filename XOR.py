@@ -43,21 +43,22 @@ def main():
     if tipo == 'cifrar':
         print('Cifrando:', nome_entrada)
 
-        arq_entrada = open(nome_entrada, 'rt', encoding = CODIF)
-        texto = arq_entrada.read()
-        arq_entrada.close()
+        with open(nome_entrada, 'rt', encoding = CODIF) as arq_entrada:
+            texto = arq_entrada.read()
 
         saida = xor_cifra(senha, texto)
 
         nome_arq_saida = nome_entrada + '.blob'
-        arq = open(nome_arq_saida, 'wb')
-        arq.write(saida)
-        arq.close()
+
+        with open(nome_arq_saida, 'wb') as arq:
+            arq.write(saida)
 
     elif tipo == 'decifrar':
         print('Decifrando:', nome_entrada)
-        arq = open(nome_entrada, 'rb')
-        blob = arq.read()
+
+        with open(nome_entrada, 'rb') as arq:
+            blob = arq.read()
+        
         texto = xor_decifra(senha, blob)
         print(texto)
 
