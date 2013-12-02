@@ -10,8 +10,9 @@ Aplica ciclicamente um XOR combinando os bytes da senha com os bytes do conteudo
 
 """
 CODIF = 'utf-8'
-senha = 'garoas'
+
 import itertools
+from getpass import getpass
 
 def xor_bytes(senha:bytes, conteudo:bytes) -> bytes:
     pares = zip(itertools.cycle(senha), conteudo)
@@ -27,18 +28,14 @@ def xor_decifra(senha:str, cifrado:bytes) -> str:
 
 def main():
     import sys
-    
-    if len(sys.argv) < 4:
+
+    try:
+        _, tipo, nome_entrada = sys.argv[1:]
+    except ValueError:
         nome_entrada = input('nome do arquivo: ')
         tipo = input('qual o tipo da acao? (cifrar|decifrar): ')
-        senha = input('senha: ')
-    elif len(sys.argv) == 4:
-        nome_entrada = sys.argv[3]
-        tipo = sys.argv[1]
-        senha = sys.argv[2]
-    else:
-        print("modo usar: XOR.py [cifrar|decifrar] [senha] [nome_arquivo]")
-        sys.exit(-1)
+    
+    senha = getpass('senha: ')
 
     if tipo == 'cifrar':
         print('Cifrando:', nome_entrada)
