@@ -1,41 +1,51 @@
+CODIF = 'utf-8'
+
 from tkinter import *
 from tkinter import ttk
-import XOR
+from tkinter import filedialog
+import itertools
+
+def xor_bytes(senha:bytes, conteudo:bytes) -> bytes:
+    pares = zip(itertools.cycle(senha), conteudo)
+    return bytes(a ^ b for a, b in pares)
+
+def xor_cifra(senha:str, claro:str) -> bytes:
+    saida = xor_bytes(senha.encode(CODIF), claro.encode(CODIF))
+    return saida
+
+def xor_decifra(senha:str, cifrado:bytes) -> str:
+    saida = xor_bytes(senha.encode(CODIF), cifrado)
+    return saida.decode(CODIF)
+
+def abrirArquivo():
+    return filedialog.askopenfile(mode = 'r')
+
+def processar(*args):
+    if tipo.get() == 'cifrar':
+        with open(arquivo.get(), 'rt', encoding = CODIF) as arq_entrada:
+            texto = arq_entrada.read()
+        saida = xor_cifra(senha.get(), texto)
+
+        nome_arq_saida = arquivo.get() + '.blob'
+        with open(nome_arq_saida, 'wb') as arq:
+            arq.write(saida)
+
+    elif tipo.get() == 'decifrar':
+        with open(arquivo.get(), 'rb') as arq:
+            blob = arq.read()
+        texto = xor_decifra(senha.get(), blob)
+
+        nome_arq_saida = arquivo.get() + '.dec'
+        with open(nome_arq_saida, 'wb') as arq:
+            arq.write(bytes(texto, CODIF))
 
 root = Tk()
 root.title("XOR - Cifra / Decifra")
 
 status = StringVar()
-status.set("Digite os campos e selecione um tipo")
+status.set("Digite os campos \ne selecione um tipo")
 statusLabel = Label(textvariable = status, height = 5)
-
-def processar(arquivo, senha, tipo):
-    if tipo == 'cifrar':
-        print('Cifrando:', nome_entrada)
-
-        with open(nome_entrada, 'rt', encoding = CODIF) as arq_entrada:
-            texto = arq_entrada.read()
-
-        saida = xor_cifra(senha, texto)
-
-        nome_arq_saida = nome_entrada + '.blob'
-
-        with open(nome_arq_saida, 'wb') as arq:
-            arq.write(saida)
-
-    elif tipo == 'decifrar':
-        print('Decifrando:', nome_entrada)
-
-        with open(nome_entrada, 'rb') as arq:
-            blob = arq.read()
-        
-        texto = xor_decifra(senha, blob)
-        print(texto)
-
-def abrirArquivo(arquivo):
-    with open(arquivo, 'rt', encoding = CODIF):
-        campoArquivo = arquivo.read()
-
+statusLabel.pack()
 
 tipo = StringVar()
 strTipoCifrar = Radiobutton(text = 'Cifra', variable = tipo, value = 'cifrar')
@@ -62,11 +72,12 @@ campoArquivo = StringVar()
 arquivo = Entry(textvariable = campoArquivo)
 arquivo.pack()
 
-botao = Button(text = "Rodar", command = processar(arquivo, senha, tipo))
+botaoArquivo = Button(text='Abrir Arquivo', command = abrirArquivo)
+botaoArquivo.pack()
+
+botao = Button(text = "Rodar", command = processar)
 botao.pack()
 
-senha.focus()
-
-root.bind('<Return>', processar(arquivo, senha, tipo))
+root.bind('<Return>', processar)
 
 root.mainloop()
