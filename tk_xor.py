@@ -18,7 +18,7 @@ def xor_decifra(senha:str, cifrado:bytes) -> str:
     return saida.decode(CODIF)
 
 def abrirArquivo():
-    return filedialog.askopenfile(mode = 'r')
+    campoArquivo = filedialog.askopenfile(mode = 'r')
 
 def processar(*args):
     if tipo.get() == 'cifrar':
