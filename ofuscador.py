@@ -14,14 +14,11 @@ class Janela(ttk.Frame):
         super().__init__(pai, padding="3 3 12 12")
         self.pack()
         self.senha = tk.StringVar()
-
         ttk.Label(self, text='senha:').grid(column=1, row=2, sticky=E)
         self.botao = ttk.Button(self, text='Cifrar', command=self.cifrar)
         self.botao.grid(column=3, row=2, sticky=W)
-
         ttk.Entry(self, width=30, textvariable=self.senha, show='*').grid(
                 column=2, row=2, sticky=(W, E))
-
         self.texto = tk.Text(self, width=80, height=30)
         self.texto.grid(column=1, row=1, columnspan=3, sticky=(W, E))
 
